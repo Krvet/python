@@ -1,4 +1,5 @@
 import collections
+from imaplib import Commands
 pets = {
     1:
         {
@@ -48,12 +49,14 @@ def update():
         return
     kkey = [x for x in pet.keys()][0]
     print("Введите данные или оставьте поле пустым. Нажмите Enter")
+
     temp = dict()
     for key, value in pet[kkey].items():
         res = input(f"{key}: ")
         if res:
             temp[key] = int(res) if res.isnumeric() else res
-            pet[kkey].update(temp)
+
+    pet[kkey].update(temp)
 
 def delete():
     ID = int(input("Введите ID: "))
@@ -72,25 +75,27 @@ def get_suffix(age):
 def pets_list():
     for key, val in pets.items():
         print(f"ID:{key}", val)
-        commands = {
-        "create": create,
-        "read": read,
-        "update": update,
-        "delete": delete,
-        "list": pets_list,
-        "stop": 0
-        }
-    def print_commands():
-        print("Список доступных комманд:")
-        for key in commands:
-            print("> ", key)
-            while True:
-                print_commands()
-                command = input("Введите команду: ")
-                if command not in commands.keys():
-                    continue
-                if command == "stop":
-                    break
-                commands[command]()
-                input("Продолжить...")
 
+commands = {
+    "create": create,
+    "read": read,
+    "update": update,
+    "delete": delete,
+    "list": pets_list,
+    "stop": 0
+}
+
+def print_commands():
+    print("Список доступных комманд:")
+    for key in commands:
+        print("> ", key)
+    while True:
+        command = input("Введите команду: ")
+        if command not in commands.keys():
+            continue
+        if command == "stop":
+            break
+        commands[command]()
+        input("Продолжить...")
+
+print_commands()
